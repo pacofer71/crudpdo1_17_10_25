@@ -4,6 +4,7 @@ namespace App\BaseDatos;
 
 use Exception;
 use \PDOException;
+use \PDO;
 
 class Usuario extends Conexion
 {
@@ -16,7 +17,8 @@ class Usuario extends Conexion
     // Metodos para el crud Create, Read, Update, Delete
     public function create()
     {
-        $q = "insert into usuarios(nombre, email, descripcion, admin) values(:n, :e, :d, :a)";
+        $q = "insert into usuarios(nombre, email, des
+        cripcion, admin) values(:n, :e, :d, :a)";
         $stmt = self::getConexion()->prepare($q);
         try {
             $stmt->execute([
@@ -28,6 +30,17 @@ class Usuario extends Conexion
         } catch (PDOException $ex) {
             throw new Exception("Error en Insert: " . $ex->getMessage());
         }
+    }
+    public static function read(): array
+    {
+        $q = "select * from usuarios order by id desc";
+        $stmt = self::getConexion()->prepare($q);
+        try {
+            $stmt->execute();
+        } catch (PDOException $ex) {
+            throw new Exception("Error en Select: " . $ex->getMessage());
+        }
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
     public function delete(int $id) {}
     // --------------------------------------------------------------- OTROS METODOS
