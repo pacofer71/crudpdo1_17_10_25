@@ -17,8 +17,7 @@ class Usuario extends Conexion
     // Metodos para el crud Create, Read, Update, Delete
     public function create()
     {
-        $q = "insert into usuarios(nombre, email, des
-        cripcion, admin) values(:n, :e, :d, :a)";
+        $q = "insert into usuarios(nombre, email, descripcion, admin) values(:n, :e, :d, :a)";
         $stmt = self::getConexion()->prepare($q);
         try {
             $stmt->execute([

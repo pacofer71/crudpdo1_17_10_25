@@ -1,9 +1,45 @@
 <?php
-    session_start();
-    require __DIR__."/../vendor/autoload.php";
-    if(isset($_POST['nombre'])){
-        //Proceso los datos
+
+use App\BaseDatos\Usuario;
+use App\Utils\Validacion;
+
+session_start();
+require __DIR__ . "/../vendor/autoload.php";
+if (isset($_POST['nombre'])) {
+    //1.- Recogemos y limpamos lo que nos llega del form
+    $nombre = Validacion::limpiarCadenas($_POST['nombre']);
+    $email = Validacion::limpiarCadenas($_POST['email']);
+    $descripcion = Validacion::limpiarCadenas($_POST['descripcion']);
+    //$admin=Validacion::limpiarCadenas($_POST['admin']);
+    $admin = (isset($_POST['admin'])) ? Validacion::limpiarCadenas($_POST['admin']) : "ERROR"; //??
+    //2.- Validamos los campos
+    $errores = false;
+    if (!Validacion::isLongitudCampoValida('nombre', $nombre, 3, 50)) {
+        $errores = true;
     }
+    if (!Validacion::isLongitudCampoValida('descripcion', $descripcion, 10, 500)) {
+        $errores = true;
+    }
+    if (!Validacion::isEmailValido($email)) {
+        $errores = true;
+    }
+    if (!Validacion::isAdminValido($admin)) {
+        $errores = true;
+    }
+    //3.- Si hay errores los muestro y si no inerto los valores
+    if ($errores) {
+        header("Location:nuevo.php");
+        die();
+    }
+    //Si estoy aquí es pq no ha habido errores, guardo los datos;
+    (new Usuario)->setNombre($nombre)
+        ->setDescripcion($descripcion)
+        ->setEmail($email)
+        ->setAdmin($admin)
+        ->create();
+    $_SESSION['mensaje'] = "Usuario guardado con éxito";
+    header("Location:index.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -31,8 +67,9 @@
                 <label for="nombre" class="block text-gray-700 font-medium mb-1">
                     <i class="fa-solid fa-user text-blue-500 mr-1"></i> Nombre
                 </label>
-                <input type="text" id="nombre" name="nombre" 
+                <input type="text" id="nombre" name="nombre"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <?php Validacion::pintarError('err_nombre') ?>
             </div>
 
             <!-- Campo Email -->
@@ -40,8 +77,9 @@
                 <label for="email" class="block text-gray-700 font-medium mb-1">
                     <i class="fa-solid fa-envelope text-blue-500 mr-1"></i> Email
                 </label>
-                <input type="email" id="email" name="email" 
+                <input type="email" id="email" name="email"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <?php Validacion::pintarError('err_email') ?>
             </div>
 
             <!-- Textarea Descripción -->
@@ -51,6 +89,7 @@
                 </label>
                 <textarea id="descripcion" name="descripcion" rows="4"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <?php Validacion::pintarError('err_descripcion') ?>
             </div>
 
             <!-- Radio Buttons Administrador -->
@@ -68,6 +107,7 @@
                         <span>NO</span>
                     </label>
                 </div>
+                <?php Validacion::pintarError('err_admin') ?>
             </div>
 
             <!-- Botones -->

@@ -21,7 +21,7 @@ $usuarios = Usuario::read();
     <title>Document</title>
 </head>
 
-<body class="p-8 bg-blue-200">
+<body class="py-8 px-12 bg-blue-200">
     <h3 class="text-center text-xl font-bold mb-2">Ver Usuarios</h3>
     <div class="relative overflow-x-auto">
         <div class="mb-2 flex flex-row-reverse">
