@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use App\BaseDatos\Usuario;
+
 class Validacion
 {
     public static function limpiarCadenas(string $cad): string
@@ -34,6 +36,15 @@ class Validacion
         }
         return true;
     }
+
+    public static function existeValor(string $email, string $campo): bool{
+        if(Usuario::existeValor($email, $campo)){
+            $_SESSION["err_$campo"]="**** Error el valor ya existe en $campo.";
+            return true;
+        }
+        return false;
+    }
+
 
     public static function pintarError(string $nombreError): void
     {

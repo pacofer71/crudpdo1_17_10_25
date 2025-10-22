@@ -11,17 +11,25 @@ if (isset($_POST['nombre'])) {
     $email = Validacion::limpiarCadenas($_POST['email']);
     $descripcion = Validacion::limpiarCadenas($_POST['descripcion']);
     //$admin=Validacion::limpiarCadenas($_POST['admin']);
-    $admin = (isset($_POST['admin'])) ? Validacion::limpiarCadenas($_POST['admin']) : "ERROR"; //??
+    
+    //$admin = (isset($_POST['admin'])) ? Validacion::limpiarCadenas($_POST['admin']) : "ERROR"; //??
+    $admin = $_POST['admin'] ?? "ERROR";
+    $admin=Validacion::limpiarCadenas($admin);
     //2.- Validamos los campos
     $errores = false;
     if (!Validacion::isLongitudCampoValida('nombre', $nombre, 3, 50)) {
         $errores = true;
+    }else{
+        if(Validacion::existeValor($nombre, 'nombre')) $errores=true;
     }
     if (!Validacion::isLongitudCampoValida('descripcion', $descripcion, 10, 500)) {
         $errores = true;
     }
     if (!Validacion::isEmailValido($email)) {
         $errores = true;
+    }else{
+        // es un email valido, comprobare si exite
+        if(Validacion::existeValor($email, 'email')) $errores=true;
     }
     if (!Validacion::isAdminValido($admin)) {
         $errores = true;

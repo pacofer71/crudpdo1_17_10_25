@@ -43,6 +43,22 @@ class Usuario extends Conexion
     }
     public function delete(int $id) {}
     // --------------------------------------------------------------- OTROS METODOS
+    public static function existeValor(string $valor, string $campo): bool{
+        $q="select count(*) as total from usuarios where $campo=:v";
+        $stmt=self::getConexion()->prepare($q);
+        try {
+            $stmt->execute([
+                ':v'=>$valor,
+            ]);
+        } catch (PDOException $ex) {
+            throw new Exception("Error en existeValor: " . $ex->getMessage());
+        }
+        $datos=$stmt->fetchAll(PDO::FETCH_OBJ);
+        //var_dump($datos);
+        //die();
+        return $datos[0]->total; // 0 si no existe el email 1 si si existe;  
+
+    }
     public static function crearRegistrosRandom(int $cantidad)
     {
         $faker = \Faker\Factory::create('es_ES');

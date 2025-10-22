@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 use App\BaseDatos\Usuario;
 
@@ -38,7 +39,7 @@ $usuarios = Usuario::read();
                     <th scope="col" class="px-6 py-3">
                         NOMBRE
                     </th>
-                     <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3">
                         EMAIL
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -53,7 +54,9 @@ $usuarios = Usuario::read();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($usuarios as $item): ?>
+                <?php foreach ($usuarios as $item):
+                    $fondo=$item->admin=='SI' ? "bg-red-500" : "bg-green-500";
+                     ?>
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             <?= $item->id; // $item['id'] si hubiese usado FETCH_ASSOC 
@@ -69,7 +72,7 @@ $usuarios = Usuario::read();
                             <?= $item->descripcion; ?>
                         </td>
                         <td class="px-6 py-4">
-                            <?= $item->admin; ?>
+                            <div class="text-center p-2 font-bold rounded-lg text-white <?=$fondo ?>"><?= $item->admin; ?></div>
                         </td>
                         <td class="px-6 py-4">
                             Botones
@@ -79,7 +82,22 @@ $usuarios = Usuario::read();
             </tbody>
         </table>
     </div>
-
+    <!-- mensajes de alerta -->
+    <?php
+    if (isset($_SESSION['mensaje'])) {
+        echo <<< TXT
+        <script>
+            Swal.fire({
+            icon: "success",
+            title: "{$_SESSION['mensaje']}",
+            showConfirmButton: false,
+            timer: 1500
+            });
+        </script>
+        TXT;
+        unset($_SESSION['mensaje']);
+    }
+    ?>
 </body>
 
 </html>
