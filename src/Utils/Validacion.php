@@ -37,8 +37,8 @@ class Validacion
         return true;
     }
 
-    public static function existeValor(string $email, string $campo): bool{
-        if(Usuario::existeValor($email, $campo)){
+    public static function existeValor(string $email, string $campo, ?int $id=null): bool{
+        if(Usuario::existeValor($email, $campo, $id)){
             $_SESSION["err_$campo"]="**** Error el valor ya existe en $campo.";
             return true;
         }

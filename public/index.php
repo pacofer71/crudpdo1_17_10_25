@@ -75,7 +75,15 @@ $usuarios = Usuario::read();
                             <div class="text-center p-2 font-bold rounded-lg text-white <?=$fondo ?>"><?= $item->admin; ?></div>
                         </td>
                         <td class="px-6 py-4">
-                            Botones
+                            <form method="POST" action="borrar.php">
+                                <input type='hidden' name="id" value="<?= $item->id ?>" />
+                                <a href="update.php?id=<?=$item->id?>">
+                                    <i class="fas fa-edit text-green-500 mr-2"></i>
+                                </a>
+                                <button type='submit' onclick="return confirm('¿Borrar definitivamente el usuario?')">
+                                    <i class="fas fa-trash text-red-500 text-lg"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
